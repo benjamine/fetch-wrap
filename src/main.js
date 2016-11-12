@@ -17,7 +17,11 @@ function extend(fetch, middleware) {
   var next = middleware[0];
   return function extendedFetch(url, options) {
     // ensure options is always an object
-    return Promise.resolve(next(url, options || {}, innerFetch));
+    try {
+      return Promise.resolve(next(url, options || {}, innerFetch));
+    } catch (err) {
+      return Promise.reject(err);
+    }
   };
 }
 

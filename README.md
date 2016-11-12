@@ -70,5 +70,20 @@ fetch('http://somedomain.com/news.json').then(function(news) {
   // GET https://somedomain.com/news.json with Authorization header, and parsed to json
   console.log(news.items);
 });
-
 ```
+
+Built-in Middleware
+-------------------
+
+There's some useful middleware in this package that you can optionally import:
+
+``` js
+var fetchWrap = require('fetch-wrap');
+var middleware = require('fetch-wrap/middleware');
+var fetch = fetchWrap(fetch, [
+  middleware.logger(),
+  middleware.receiveJson()
+]);
+```
+
+For details on what's available check [src/middleware.js](src/middleware.js)

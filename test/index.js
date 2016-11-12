@@ -205,3 +205,5 @@ describe('fetchWrap', function() {
     });
   });
 });
+
+require('./middleware');
