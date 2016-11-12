@@ -1,7 +1,7 @@
 {
   "license": "MIT",
   "name": "fetch-wrap",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "extend WHATWG fetch wrapping it with middlewares",
   "repository": {
     "type": "git",

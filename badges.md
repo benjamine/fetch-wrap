@@ -1,5 +1,0 @@
-[![Build Status](https://secure.travis-ci.org/benjamine/fetch-wrap.svg)](http://travis-ci.org/benjamine/fetch-wrap)
-[![Code Climate](https://codeclimate.com/github/benjamine/fetch-wrap/badges/gpa.svg)](https://codeclimate.com/github/benjamine/fetch-wrap)
-[![Test Coverage](https://codeclimate.com/github/benjamine/fetch-wrap/badges/coverage.svg)](https://codeclimate.com/github/benjamine/fetch-wrap)
-[![NPM version](https://badge.fury.io/js/fetch-wrap.svg)](http://badge.fury.io/js/fetch-wrap)
-[![NPM dependencies](https://david-dm.org/benjamine/fetch-wrap.svg)](https://david-dm.org/benjamine/fetch-wrap)
