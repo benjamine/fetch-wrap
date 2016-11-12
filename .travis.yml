@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - "stable"
+after_success:
+  - npm run cover-publish
+addons:
+  code_climate:
+    repo_token:
+      # # get your token from https://codeclimate.com/github/benjamine/fetch-wrap
+      # gem install travis
+      # travis encrypt <projecttoken>
+      secure: "project's encrypted token"

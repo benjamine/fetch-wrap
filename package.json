@@ -1,0 +1,49 @@
+{
+  "license": "MIT",
+  "name": "fetch-wrap",
+  "version": "0.0.1",
+  "description": "extend WHATWG fetch wrapping it with middlewares",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamine/fetch-wrap.git"
+  },
+  "main": "./src/main",
+  "scripts": {
+    "test": "make -s && eslint src test && mocha",
+    "check": "npm-check && nsp check",
+    "checku": "npm-check -u && nsp check",
+    "preversion": "npm test && npm run check",
+    "postversion": "git push && git push --tags && fiberglass publish",
+    "watch": "make -s && nodemon --exec \"npm test\"",
+    "cover": "istanbul cover --root src _mocha",
+    "cover-report": "open coverage/lcov-report/index.html",
+    "cover-publish": "istanbul cover _mocha --report lcovonly && codeclimate < coverage/lcov.info"
+  },
+  "keywords": [
+    "fetch",
+    "wrap",
+    "middleware",
+    "whatwg",
+    "http",
+    "client",
+    "isomorphic"
+  ],
+  "author": "Benjamin Eidelman <beneidel@gmail.com>",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "codeclimate-test-reporter": "^0.4.0",
+    "eslint": "^3.10.0",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.3.2",
+    "eslint-plugin-standard": "^2.0.1",
+    "fetch-ponyfill": "^3.0.2",
+    "fiberglass": "0.0.23",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.1.2",
+    "mocha-lcov-reporter": "^1.2.0",
+    "nodemon": "^1.11.0",
+    "npm-check": "^5.4.0",
+    "nsp": "^2.6.2"
+  }
+}

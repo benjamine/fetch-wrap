@@ -1,0 +1,16 @@
+machine:
+  node:
+    version: 4.3.0
+
+test:
+  override:
+    - npm run cover
+
+    # for codeclimate coverage report:
+    #  get your token from https://codeclimate.com/github/benjamine/fetch-wrap
+    #  save it in circleci project environment as CODECLIMATE_REPO_TOKEN
+    #- npm run cover-publish
+
+general:
+  artifacts:
+    - "coverage"
