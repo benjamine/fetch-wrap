@@ -17,7 +17,7 @@
     "watch": "make -s && nodemon --exec \"npm test\"",
     "cover": "istanbul cover --root src _mocha",
     "cover-report": "open coverage/lcov-report/index.html",
-    "cover-publish": "istanbul cover _mocha --report lcovonly && codeclimate < coverage/lcov.info"
+    "cover-publish": "istanbul cover _mocha --report lcovonly && codeclimate-test-reporter < coverage/lcov.info"
   },
   "keywords": [
     "fetch",

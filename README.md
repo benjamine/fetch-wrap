@@ -21,10 +21,10 @@ Usage
 const fetchWrap = require('fetchWrap');
 
 // you can use native fetch(), or the implementation you prefer
-const fetch = require('fetch-ponyfill')();
+let fetch = require('fetch-ponyfill')();
 
 // extend fetch with a list of wrappers
-const fetch = fetchWrap(fetch, [
+fetch = fetchWrap(fetch, [
 
   function(url, options, fetch) {
     // modify url or options
