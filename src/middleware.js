@@ -88,9 +88,12 @@ function logger(loggerOptions) {
         clear();
       }
       // 400-404 are expected errors, should be normally handled by app logic
-      if (!err.status || err.status > 404) {
-        log.apply(this, buildArgs('error', 'failed', err));
-      }
+      var unexpected = !err.status || err.status > 404;
+      var parsedError = {
+        message: err.message,
+        status: err.status
+      };
+      log.apply(this, buildArgs(unexpected ? 'error' : 'debug', 'failed', parsedError));
       throw err;
     });
   };
