@@ -64,13 +64,13 @@ describe('fetchWrap/middleware', function() {
       const fetch = fetchWrap(mockedFetch, [
         middleware.logger({
           success: true,
-          log: function(msg) { output.push(msg); }
+          log: function(msg) { output.push(Array.prototype.join.call(arguments, ' ')); }
         })
       ]);
       return fetch('http://localhost/fake-url').then(function(result) {
         expect(output).to.eql([
-          '[fetch] GET http://localhost/fake-url',
-          '[fetch] SUCCESS for GET http://localhost/fake-url'
+          'debug [fetch] GET http://localhost/fake-url start',
+          'debug [fetch] GET http://localhost/fake-url success'
         ]);
       });
     });
@@ -79,7 +79,7 @@ describe('fetchWrap/middleware', function() {
       const output = [];
       const fetch = fetchWrap(mockedFetch, [
         middleware.logger({
-          log: function(msg) { output.push(msg); }
+          log: function(msg) { output.push(Array.prototype.join.call(arguments, ' ')); }
         })
       ]);
       return fetch('http://localhost/fake-url').catch(function(err) {
@@ -87,8 +87,88 @@ describe('fetchWrap/middleware', function() {
         err = null;
       }).then(function(result) {
         expect(output).to.eql([
-          '[fetch] GET http://localhost/fake-url',
-          '[fetch] FAILED request failed for GET http://localhost/fake-url'
+          'debug [fetch] GET http://localhost/fake-url start',
+          'error [fetch] GET http://localhost/fake-url failed Error: request failed'
+        ]);
+      });
+    });
+    it('logs multiple timeouts', function() {
+      const mockedFetch = mockFetch(new Promise(function(resolve) {
+        // take 1 second to respond
+        setTimeout(function() {
+          resolve(123);
+        }, 400);
+      }));
+      const output = [];
+      const fetch = fetchWrap(mockedFetch, [
+        middleware.logger({
+          log: function(msg) { output.push(Array.prototype.join.call(arguments, ' ')); }
+        })
+      ]);
+      return fetch('http://localhost/fake-url', {
+        timeouts: {
+          0.1: 'warn',
+          0.3: 'error'
+        }
+      }).then(function(result) {
+        expect(output).to.eql([
+          'debug [fetch] GET http://localhost/fake-url start',
+          'warn [fetch] GET http://localhost/fake-url timeout 0.1',
+          'error [fetch] GET http://localhost/fake-url timeout 0.3'
+        ]);
+      });
+    });
+    it('doesn\'t log timeouts after success', function() {
+      const mockedFetch = mockFetch(new Promise(function(resolve) {
+        // take 1 second to respond
+        setTimeout(function() {
+          resolve(123);
+        }, 200);
+      }));
+      const output = [];
+      const fetch = fetchWrap(mockedFetch, [
+        middleware.logger({
+          success: true,
+          log: function(msg) { output.push(Array.prototype.join.call(arguments, ' ')); }
+        })
+      ]);
+      return fetch('http://localhost/fake-url', {
+        timeouts: {
+          0.1: 'warn',
+          0.3: 'error'
+        }
+      }).then(function(result) {
+        expect(output).to.eql([
+          'debug [fetch] GET http://localhost/fake-url start',
+          'warn [fetch] GET http://localhost/fake-url timeout 0.1',
+          'debug [fetch] GET http://localhost/fake-url success'
+        ]);
+      });
+    });
+    it('doesn\'t log timeouts after error', function() {
+      const mockedFetch = mockFetch(new Promise(function(resolve, reject) {
+        // take 1 second to respond
+        setTimeout(function() {
+          reject(new Error('request failed'));
+        }, 200);
+      }));
+      const output = [];
+      const fetch = fetchWrap(mockedFetch, [
+        middleware.logger({
+          success: true,
+          log: function(msg) { output.push(Array.prototype.join.call(arguments, ' ')); }
+        })
+      ]);
+      return expect(fetch('http://localhost/fake-url', {
+        timeouts: {
+          0.1: 'warn',
+          0.3: 'error'
+        }
+      })).to.eventually.be.rejectedWith('request failed').then(function() {
+        expect(output).to.eql([
+          'debug [fetch] GET http://localhost/fake-url start',
+          'warn [fetch] GET http://localhost/fake-url timeout 0.1',
+          'error [fetch] GET http://localhost/fake-url failed Error: request failed'
         ]);
       });
     });

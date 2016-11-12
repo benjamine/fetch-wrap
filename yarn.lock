@@ -359,6 +359,13 @@ beeper@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/beeper/-/beeper-1.1.1.tgz#e6d5ea8c5dad001304a70b22638447f69cb2f809"
 
+benchmark:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/benchmark/-/benchmark-2.1.2.tgz#0676d82e560d82d2f317f82cf0858483955a7bfe"
+  dependencies:
+    lodash "^4.16.4"
+    platform "^1.3.1"
+
 benchmark@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/benchmark/-/benchmark-1.0.0.tgz#2f1e2fa4c359f11122aa183082218e957e390c73"
@@ -3592,7 +3599,7 @@ lodash@^3.0.1, lodash@^3.8.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
-lodash@^4.0.0, lodash@^4.14.0, lodash@^4.2.0, lodash@^4.3.0, lodash@^4.5.1, lodash@^4.7.0, "lodash@4.6.1 || ^4.16.1":
+lodash@^4.0.0, lodash@^4.14.0, lodash@^4.16.4, lodash@^4.2.0, lodash@^4.3.0, lodash@^4.5.1, lodash@^4.7.0, "lodash@4.6.1 || ^4.16.1":
   version "4.16.6"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.16.6.tgz#d22c9ac660288f3843e16ba7d2b5d06cca27d777"
 
@@ -4412,6 +4419,10 @@ pkg-dir@^1.0.0:
   resolved "https://registry.yarnpkg.com/pkg-dir/-/pkg-dir-1.0.0.tgz#7a4b508a8d5bb2d629d447056ff4e9c9314cf3d4"
   dependencies:
     find-up "^1.0.0"
+
+platform@^1.3.1:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/platform/-/platform-1.3.3.tgz#646c77011899870b6a0903e75e997e8e51da7461"
 
 pluralize@^1.2.1:
   version "1.2.1"

@@ -43,22 +43,53 @@ exports.optionsByUrlPattern = optionsByUrlPattern;
   logs requests
   - by default using console, specify loggerOptions.log to override
   - if loggerOptions.success successful responses are logged too
+  - use loggerOptions.elapsed adds elapsed seconds as last parameter to .log
+  - fetch has options.timeouts .log is called at different timeouts:
+     fetch(url, { timeouts: {
+       5: 'info',
+       10: 'warn',
+       30: 'error'
+     }});
 */
 function logger(loggerOptions) {
-  var log = (loggerOptions && loggerOptions.log) || function() {
-    return console.log.apply(console, arguments);
+  var log = (loggerOptions && loggerOptions.log) || function(level) {
+    return console[level === 'error' ? 'error' : 'log'].apply(console, arguments);
   };
   return function(url, options, fetch) {
-    log('[fetch] ' + (options.method || 'GET') + ' ' + url);
+    var method = options.method || 'GET';
+    var startTime = new Date().getTime();
+    function buildArgs(level, eventName, additionalArg) {
+      var args = [level, '[fetch]', method, url, eventName];
+      if (additionalArg !== undefined && additionalArg !== null) {
+        args.push(additionalArg);
+      }
+      if (options.elapsed && (eventName === 'success' || eventName === 'failed')) {
+        args.push((new Date().getTime() - startTime) / 1000);
+      }
+      return args;
+    }
+    log.apply(this, buildArgs('debug', 'start'));
+    var clear;
+    if (options.timeouts) {
+      clear = setTimeouts(options.timeouts, function(seconds, level) {
+        log.apply(this, buildArgs(level, 'timeout', seconds));
+      }).clear;
+    }
     return fetch(url, options).then(function(result) {
+      if (clear) {
+        clear();
+      }
       if (loggerOptions && loggerOptions.success) {
-        log('[fetch] SUCCESS for ' + (options.method || 'GET') + ' ' + url);
+        log.apply(this, buildArgs('debug', 'success'));
       }
       return result;
     }).catch(function(err) {
+      if (clear) {
+        clear();
+      }
       // 400-404 are expected errors, should be normally handled by app logic
       if (!err.status || err.status > 404) {
-        log('[fetch] FAILED ' + err.message + ' for ' + (options.method || 'GET') + ' ' + url);
+        log.apply(this, buildArgs('error', 'failed', err));
       }
       throw err;
     });
@@ -228,4 +259,29 @@ function urlMatchesPattern(url, pattern) {
     return regex.test(url);
   }
   return false;
+}
+
+function setTimeouts(timeouts, handler) {
+  function setSingleTimeout(fn, seconds) {
+    return setTimeout(function() {
+      fn(seconds, timeouts[seconds]);
+    }, seconds * 1000);
+  };
+  var handles = [];
+  for (var seconds in timeouts) {
+    if (timeouts.hasOwnProperty(seconds)) {
+      handles.push(setSingleTimeout(handler, seconds));
+    }
+  }
+  return {
+    clear: function() {
+      if (!handles) {
+        return;
+      }
+      for (var i = 0; i < handles.length; i++) {
+        clearTimeout(handles[i]);
+      }
+      handles = null;
+    }
+  };
 }
