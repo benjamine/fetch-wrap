@@ -25,14 +25,14 @@ Usage
 -----
 
 ``` js
-const fetchWrap = require('fetchWrap');
+const fetchWrap = require('fetch-wrap');
 
 // you can use native fetch(), or the implementation you prefer
 let fetch = require('fetch-ponyfill')();
 
 // extend fetch with a list of wrappers
 fetch = fetchWrap(fetch, [
-  function middleware1(url, options, fetch) {
+  function middleware1(url, options, innerFetch) {
     // this middleware does nothing
     return innerFetch(url, options);
   },
