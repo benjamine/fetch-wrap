@@ -132,6 +132,7 @@ exports.sendJSON = sendJSON;
 /**
   Prepare for JSON responses
   - if options.acceptHeader, sets Accept header to application/json
+  - if options.reviver, reviver is used for JSON.parse, otherwise a default Date reviver is used
   - parses JSON response automatically if Content-Type is application/json
   - throws if response is an http error
 */
@@ -140,6 +141,9 @@ function receiveJSON(receiveOptions) {
     // ask for json
     var patchedOptions = receiveOptions && receiveOptions.acceptHeader
       ? setHttpHeaders(options, { 'Accept': 'application/json' }) : options;
+    const reviver = (receiveOptions && typeof receiveOptions.reviver !== undefined)
+      ? receiveOptions.reviver
+      : dateReviver;
     return fetch(url, patchedOptions).then(function(result) {
       if (!result.ok) {
         // http error, promise fail
@@ -154,7 +158,7 @@ function receiveJSON(receiveOptions) {
           if (text === undefined || text === null || text === '') {
             return undefined;
           }
-          return JSON.parse(text, dateReviver);
+          return JSON.parse(text, reviver);
         });
       } else {
         return result.text();
