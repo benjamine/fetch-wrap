@@ -145,24 +145,24 @@ function receiveJSON(receiveOptions) {
       ? receiveOptions.reviver
       : dateReviver;
     return fetch(url, patchedOptions).then(function(result) {
-      if (!result.ok) {
+      return result.text().then(function(text) {
+        var body = text;
+        if (text === undefined || text === null || text === '') {
+          body = undefined;
+        } else if (/application\/json/.test(result.headers.get('content-type'))) {
+          // got json, parse it
+          body = JSON.parse(text, reviver);
+        }
+        if (result.ok) {
+          return body;
+        }
         // http error, promise fail
         var err = new Error('http error ' + result.status + ': ' + result.statusText);
         err.fetchResult = result;
         err.status = result.status;
+        err.body = body;
         throw err;
-      }
-      if (/application\/json/.test(result.headers.get('content-type'))) {
-        // got json, parse it
-        return result.text().then(function(text) {
-          if (text === undefined || text === null || text === '') {
-            return undefined;
-          }
-          return JSON.parse(text, reviver);
-        });
-      } else {
-        return result.text();
-      }
+      });
     });
   };
 }
