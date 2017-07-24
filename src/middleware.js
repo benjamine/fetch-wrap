@@ -145,7 +145,7 @@ function receiveJSON(receiveOptions) {
       ? receiveOptions.reviver
       : dateReviver;
     return fetch(url, patchedOptions).then(function(result) {
-      return result.text().then(function(text) {
+      function resultTextHandler(text) {
         var body = text;
         if (text === undefined || text === null || text === '') {
           body = undefined;
@@ -162,7 +162,13 @@ function receiveJSON(receiveOptions) {
         err.status = result.status;
         err.body = body;
         throw err;
-      });
+      }
+
+      if (!result || typeof result.text !== 'function') {
+        return resultTextHandler();
+      }
+
+      return result.text().then(resultTextHandler);
     });
   };
 }
