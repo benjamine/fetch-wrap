@@ -135,12 +135,18 @@ exports.sendJSON = sendJSON;
   - if options.reviver, reviver is used for JSON.parse, otherwise a default Date reviver is used
   - parses JSON response automatically if Content-Type is application/json
   - throws if response is an http error
+
+  you can still get the raw result using:
+    fetch(url, { returnRawResult: true })
 */
 function receiveJSON(receiveOptions) {
   return function(url, options, fetch) {
     // ask for json
     var patchedOptions = receiveOptions && receiveOptions.acceptHeader
       ? setHttpHeaders(options, { 'Accept': 'application/json' }) : options;
+    if (patchedOptions.returnRawResult) {
+      return fetch(url, patchedOptions);
+    }
     const reviver = (receiveOptions && typeof receiveOptions.reviver !== undefined)
       ? receiveOptions.reviver
       : dateReviver;

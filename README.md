@@ -80,7 +80,7 @@ var fetch = fetchWrap(fetch, [
   // automatically parse JSON (revives Dates), optionally send Accept header
   //   throws on http errors
   middleware.receiveJson()
-  // logs evensto (start, success, fail, timeouts), defaults to console but supports custom .log handler
+  // logs events (start, success, fail, timeouts), defaults to console but supports custom .log handler
   middleware.logger()
 ]);
 
