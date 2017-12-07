@@ -180,6 +180,23 @@ describe('fetchWrap/middleware', function() {
         ]);
       });
     });
+    it('logs elapsed', function() {
+      const mockedFetch = mockFetch(123);
+      const output = [];
+      const fetch = fetchWrap(mockedFetch, [
+        middleware.logger({
+          success: true,
+          elapsed: true,
+          log: function() { output.push(serialize.apply(this, arguments)); }
+        })
+      ]);
+      return fetch('http://localhost/fake-url').then(function(result) {
+        expect(output).to.eql([
+          'debug [fetch] GET http://localhost/fake-url start',
+          'debug [fetch] GET http://localhost/fake-url success 0'
+        ]);
+      });
+    });
   });
 
   describe('#urlParams', function() {
