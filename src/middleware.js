@@ -222,7 +222,7 @@ function setHttpHeaders(options, headers, override) {
 var ESCAPE_OPEN_CURLY_BRACKETS = '@@OPEN-CURLY-BRACKET@@';
 var ESCAPE_CLOSE_CURLY_BRACKETS = '@@CLOSE-CURLY-BRACKET@@';
 var ESCAPE_OPEN_CURLY_BRACKETS_REGEX = new RegExp(ESCAPE_OPEN_CURLY_BRACKETS, 'g');
-var ESCPAE_CLOSE_CURLY_BRACKETS_REGEX = new RegExp(ESCAPE_CLOSE_CURLY_BRACKETS, 'g');
+var ESCAPE_CLOSE_CURLY_BRACKETS_REGEX = new RegExp(ESCAPE_CLOSE_CURLY_BRACKETS, 'g');
 
 function setUrlParams(input, params, optionalParams, failIfParamIsMissing) {
   if (!params && !optionalParams) {
@@ -248,7 +248,7 @@ function setUrlParams(input, params, optionalParams, failIfParamIsMissing) {
       return value;
     })
     .replace(ESCAPE_OPEN_CURLY_BRACKETS_REGEX, '{')
-    .replace(ESCPAE_CLOSE_CURLY_BRACKETS_REGEX, '}');
+    .replace(ESCAPE_CLOSE_CURLY_BRACKETS_REGEX, '}');
 
   return addUrlQueryParams(url, unusedParams);
 }
