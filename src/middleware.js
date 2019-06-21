@@ -219,26 +219,37 @@ function setHttpHeaders(options, headers, override) {
     : merge({}, { headers: headers }, options);
 }
 
+var ESCAPE_OPEN_CURLY_BRACKETS = '@@OPEN-CURLY-BRACKET@@';
+var ESCAPE_CLOSE_CURLY_BRACKETS = '@@CLOSE-CURLY-BRACKET@@';
+var ESCAPE_OPEN_CURLY_BRACKETS_REGEX = new RegExp(ESCAPE_OPEN_CURLY_BRACKETS, 'g');
+var ESCAPE_CLOSE_CURLY_BRACKETS_REGEX = new RegExp(ESCAPE_CLOSE_CURLY_BRACKETS, 'g');
+
 function setUrlParams(input, params, optionalParams, failIfParamIsMissing) {
   if (!params && !optionalParams) {
     return input;
   }
   var unusedParams = merge({}, params);
-  var url = input.replace(/\{([^}]+)\}/g, function(match, name) {
-    var value = params && params[name];
-    if (value === undefined) {
-      value = optionalParams && optionalParams[name];
-    } else {
-      delete unusedParams[name];
-    }
-    if (value === undefined) {
-      if (failIfParamIsMissing === false) {
-        return match;
+  var url = input
+    .replace(/\{\{/g, ESCAPE_OPEN_CURLY_BRACKETS)
+    .replace(/\}\}/g, ESCAPE_CLOSE_CURLY_BRACKETS)
+    .replace(/\{([^}]+)\}/g, function(match, name) {
+      var value = params && params[name];
+      if (value === undefined) {
+        value = optionalParams && optionalParams[name];
+      } else {
+        delete unusedParams[name];
       }
-      throw new Error('url param not found: ' + match);
-    }
-    return value;
-  });
+      if (value === undefined) {
+        if (failIfParamIsMissing === false) {
+          return match;
+        }
+        throw new Error('url param not found: ' + match);
+      }
+      return value;
+    })
+    .replace(ESCAPE_OPEN_CURLY_BRACKETS_REGEX, '{')
+    .replace(ESCAPE_CLOSE_CURLY_BRACKETS_REGEX, '}');
+
   return addUrlQueryParams(url, unusedParams);
 }
 

@@ -230,6 +230,19 @@ describe('fetchWrap/middleware', function() {
         }
       })).to.eventually.be.rejectedWith('url param not found: {section}');
     });
+    it('double curly brackets is the way to use curly bracket in the url', function() {
+      const mockedFetch = mockFetch(123);
+      const fetch = fetchWrap(mockedFetch, [
+        middleware.urlParams({
+          id: 57
+        })
+      ]);
+      return fetch('http://localhost/users/{id}/{{section}}').then(function(result) {
+        expect(mockedFetch.calls[0].url).to.eql(
+          'http://localhost/users/57/{section}'
+        );
+      });
+    });
     it('fail is missing can be disabled', function() {
       const mockedFetch = mockFetch(123);
       const fetch = fetchWrap(mockedFetch, [
