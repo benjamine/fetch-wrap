@@ -63,7 +63,7 @@ function logger(loggerOptions) {
       if (additionalArg !== undefined && additionalArg !== null) {
         args.push(additionalArg);
       }
-      if (options.elapsed && (eventName === 'success' || eventName === 'failed')) {
+      if (loggerOptions.elapsed && (eventName === 'success' || eventName === 'failed')) {
         args.push((new Date().getTime() - startTime) / 1000);
       }
       return args;
