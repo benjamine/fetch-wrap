@@ -44,30 +44,30 @@ suite.add('fetch GET json', function(deferred) {
       '1': 'warn'
     }
   })
-  .then(function(response) {
-    if (response.ok) {
-      return response.json();
-    }
-  }).then(validateResult).then(function() {
-    deferred.resolve();
-  });
-}, {defer: true})
-.add('extended fetch GET json', function(deferred) {
-  extendedFetch('http://{host}:8080/test')
-  .then(validateResult)
-  .then(function() {
-    deferred.resolve();
-  });
-}, {defer: true})
+    .then(function(response) {
+      if (response.ok) {
+        return response.json();
+      }
+    }).then(validateResult).then(function() {
+      deferred.resolve();
+    });
+}, { defer: true })
+  .add('extended fetch GET json', function(deferred) {
+    extendedFetch('http://{host}:8080/test')
+      .then(validateResult)
+      .then(function() {
+        deferred.resolve();
+      });
+  }, { defer: true })
 
 // add listeners
-.on('cycle', function(event) {
-  console.log(String(event.target));
-})
-.on('complete', function() {
-  console.log('Fastest is ' + this.filter('fastest').map('name'));
-  process.exit(0);
-});
+  .on('cycle', function(event) {
+    console.log(String(event.target));
+  })
+  .on('complete', function() {
+    console.log('Fastest is ' + this.filter('fastest').map('name'));
+    process.exit(0);
+  });
 
 function validateResult(result) {
   if (!result || !result.name === 'john') {

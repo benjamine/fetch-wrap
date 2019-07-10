@@ -339,9 +339,9 @@ describe('fetchWrap/middleware', function() {
         })
       ]);
       return fetch('http://localhost/users', { method: 'PUT' })
-      .then(function(result) {
-        expect(result).to.eql(321);
-      });
+        .then(function(result) {
+          expect(result).to.eql(321);
+        });
     });
     it('can spy requests', function() {
       const mockedFetch = mockFetch(123);
@@ -355,11 +355,11 @@ describe('fetchWrap/middleware', function() {
         })
       ]);
       return fetch('http://localhost/users', { method: 'PUT' })
-      .then(function(result) {
-        expect(spyLog).to.eql([
-          ['http://localhost/users', { method: 'PUT' }]
-        ]);
-      });
+        .then(function(result) {
+          expect(spyLog).to.eql([
+            ['http://localhost/users', { method: 'PUT' }]
+          ]);
+        });
     });
   });
 });

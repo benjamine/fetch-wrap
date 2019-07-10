@@ -147,7 +147,7 @@ function receiveJSON(receiveOptions) {
     if (patchedOptions.returnRawResult) {
       return fetch(url, patchedOptions);
     }
-    var reviver = (receiveOptions && typeof receiveOptions.reviver !== undefined)
+    var reviver = (receiveOptions && typeof receiveOptions.reviver !== 'undefined')
       ? receiveOptions.reviver
       : dateReviver;
     return fetch(url, patchedOptions).then(function(result) {

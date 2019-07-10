@@ -78,11 +78,11 @@ describe('fetchWrap', function() {
           return fetch(url, options);
         }]);
         return fetch('http://localhost/fake-url', { method: 'PUT', mode: 'cors' })
-        .then(function(result) {
-          expect(result).to.eql(123);
-          expect(mockedFetch.calls).to.have.length(1);
-          expect(mockedFetch.calls[0].options).to.eql({ method: 'DELETE', mode: 'cors' });
-        });
+          .then(function(result) {
+            expect(result).to.eql(123);
+            expect(mockedFetch.calls).to.have.length(1);
+            expect(mockedFetch.calls[0].options).to.eql({ method: 'DELETE', mode: 'cors' });
+          });
       });
 
       it('options (even if not specified)', function() {
