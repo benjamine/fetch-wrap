@@ -187,14 +187,22 @@ describe('fetchWrap/middleware', function() {
         middleware.logger({
           success: true,
           elapsed: true,
-          log: function() { output.push(serialize.apply(this, arguments)); }
+          log: function(...args) {
+            if (typeof args[args.length - 1] === 'number') {
+              output.push(serialize.apply(this, args.slice(0, -1)), args[args.length - 1]);
+              return;
+            }
+            output.push(serialize.apply(this, arguments));
+          }
         })
       ]);
       return fetch('http://localhost/fake-url').then(function(result) {
-        expect(output).to.eql([
+        expect(output.slice(0, -1)).to.eql([
           'debug [fetch] GET http://localhost/fake-url start',
-          'debug [fetch] GET http://localhost/fake-url success 0'
+          'debug [fetch] GET http://localhost/fake-url success'
         ]);
+        expect(output[2]).to.be.gte(0);
+        expect(output[2]).to.be.lt(0.5);
       });
     });
   });
